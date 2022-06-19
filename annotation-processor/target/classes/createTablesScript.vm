@@ -1,0 +1,11 @@
+#foreach($entity in $entities)
+DROP TABLE IF EXISTS $entity.getTableName();
+CREATE TABLE $entity.getTableName() (
+#foreach($field in $entity.getFields())
+    $field.columnName() $field.sqlType()#if($field.pk()) PRIMARY KEY AUTO_INCREMENT#end#if($foreach.hasNext),
+#end
+#end
+
+);
+
+#end

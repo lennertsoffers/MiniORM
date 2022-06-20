@@ -1,8 +1,10 @@
 com\lennertsoffers\annotation\processor\exception\UnsupportedTypeException.class
 com\lennertsoffers\annotation\processor\processors\EntityProcessor.class
-com\lennertsoffers\annotation\processor\models\Field.class
+com\lennertsoffers\annotation\processor\processors\EntityMapper.class
+com\lennertsoffers\annotation\processor\annotations\Column.class
 com\lennertsoffers\annotation\processor\annotations\Entity.class
 com\lennertsoffers\annotation\processor\annotations\Id.class
-com\lennertsoffers\annotation\processor\models\Entity.class
+com\lennertsoffers\annotation\processor\models\FieldColumn.class
 com\lennertsoffers\annotation\processor\models\FieldFactory.class
 META-INF\services\javax.annotation.processing.Processor
+com\lennertsoffers\annotation\processor\models\EntityTable.class

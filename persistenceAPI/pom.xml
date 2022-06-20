@@ -9,20 +9,19 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>processor-test</artifactId>
+    <artifactId>persistenceAPI</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.lennertsoffers</groupId>
-            <artifactId>annotation-processor</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.lennertsoffers</groupId>
-            <artifactId>persistenceAPI</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>provided</scope>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.29</version>
         </dependency>
     </dependencies>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
 
 </project>

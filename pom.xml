@@ -11,6 +11,7 @@
     <modules>
         <module>annotation-processor</module>
         <module>processor-test</module>
+        <module>persistenceAPI</module>
     </modules>
 
     <dependencies>

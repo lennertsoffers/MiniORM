@@ -1,3 +1,4 @@
+C:\Users\lenne\Documents\Personal\Programming\Java\Annotation Processing\MiniORM\annotation-processor\src\main\java\com\lennertsoffers\annotation\processor\models\generators\Generator.java
 C:\Users\lenne\Documents\Personal\Programming\Java\Annotation Processing\MiniORM\annotation-processor\src\main\java\com\lennertsoffers\annotation\processor\annotations\Id.java
 C:\Users\lenne\Documents\Personal\Programming\Java\Annotation Processing\MiniORM\annotation-processor\src\main\java\com\lennertsoffers\annotation\processor\models\FieldFactory.java
 C:\Users\lenne\Documents\Personal\Programming\Java\Annotation Processing\MiniORM\annotation-processor\src\main\java\com\lennertsoffers\annotation\processor\processors\EntityProcessor.java
@@ -5,5 +6,6 @@ C:\Users\lenne\Documents\Personal\Programming\Java\Annotation Processing\MiniORM
 C:\Users\lenne\Documents\Personal\Programming\Java\Annotation Processing\MiniORM\annotation-processor\src\main\java\com\lennertsoffers\annotation\processor\annotations\Column.java
 C:\Users\lenne\Documents\Personal\Programming\Java\Annotation Processing\MiniORM\annotation-processor\src\main\java\com\lennertsoffers\annotation\processor\models\EntityTable.java
 C:\Users\lenne\Documents\Personal\Programming\Java\Annotation Processing\MiniORM\annotation-processor\src\main\java\com\lennertsoffers\annotation\processor\models\FieldColumn.java
+C:\Users\lenne\Documents\Personal\Programming\Java\Annotation Processing\MiniORM\annotation-processor\src\main\java\com\lennertsoffers\annotation\processor\models\generators\ResourceGenerator.java
 C:\Users\lenne\Documents\Personal\Programming\Java\Annotation Processing\MiniORM\annotation-processor\src\main\java\com\lennertsoffers\annotation\processor\exception\UnsupportedTypeException.java
 C:\Users\lenne\Documents\Personal\Programming\Java\Annotation Processing\MiniORM\annotation-processor\src\main\java\com\lennertsoffers\annotation\processor\processors\EntityMapper.java

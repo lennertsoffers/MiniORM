@@ -5,7 +5,10 @@ import com.lennertsoffers.annotation.processor.annotations.Entity;
 import com.lennertsoffers.annotation.processor.annotations.Id;
 import com.lennertsoffers.annotation.processor.models.EntityTable;
 import com.lennertsoffers.annotation.processor.models.FieldFactory;
+import com.lennertsoffers.annotation.processor.models.generators.ResourceGenerator;
+import org.apache.velocity.VelocityContext;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.DeclaredType;
@@ -15,15 +18,16 @@ import java.util.Set;
 
 public class EntityMapper {
     private final Set<? extends Element> annotatedElements;
+    private final ProcessingEnvironment processingEnvironment;
     private final FieldFactory fieldFactory = new FieldFactory();
+    private final Set<EntityTable> mappedEntities = new HashSet<>();
 
-    public EntityMapper(Set<? extends Element> annotatedElements) {
+    public EntityMapper(Set<? extends Element> annotatedElements, ProcessingEnvironment processingEnvironment) {
         this.annotatedElements = annotatedElements;
+        this.processingEnvironment = processingEnvironment;
     }
 
-    public Set<EntityTable> mapEntities() {
-        Set<EntityTable> entityTableSet = new HashSet<>();
-
+    public void mapEntities() {
         this.annotatedElements.forEach(element -> {
             // Create entity and set name values
             EntityTable entity = this.createEntity(element);
@@ -31,10 +35,12 @@ public class EntityMapper {
             // Set fields of the entity
             this.setFields(entity, element);
 
-            entityTableSet.add(entity);
+            // Add the entity to the set
+            this.mappedEntities.add(entity);
         });
 
-        return entityTableSet;
+        // Generate files corresponding to the mapped entities
+        this.generateFiles();
     }
 
     /**
@@ -102,5 +108,29 @@ public class EntityMapper {
                 }
             }
         });
+    }
+
+    private void generateFiles() {
+        boolean generatedTableCreationScript = this.generateTableCreationScript();
+
+        System.out.println("Generated table creation script: " + generatedTableCreationScript);
+    }
+
+    /**
+     * Generates the sql script for the creation of the correct tables and columns based on the mapped entities
+     * @return if the generation of the script was successful
+     */
+    private boolean generateTableCreationScript() {
+        // Create a velocityContext with the mappedEntities
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("entities", this.mappedEntities);
+
+        // Use a ResourceGenerator to generate the resource
+        return new ResourceGenerator(
+                "createTablesScript.vm",
+                "createTablesScript.sql",
+                this.processingEnvironment,
+                velocityContext
+        ).generateFile();
     }
 }

@@ -1,0 +1,6 @@
+com\lennertsoffers\persistence\api\PersistenceAPI.class
+com\lennertsoffers\persistence\api\SqlFileExecutor.class
+com\lennertsoffers\persistence\api\TableLoader.class
+com\lennertsoffers\persistence\api\repositories\Repository.class
+com\lennertsoffers\persistence\api\FileExecutor.class
+com\lennertsoffers\persistence\api\ConnectionFactory.class

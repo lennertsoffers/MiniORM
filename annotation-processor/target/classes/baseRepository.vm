@@ -1,0 +1,39 @@
+package com.lennertsoffers.processor.test;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import com.lennertsoffers.persistence.api.ConnectionFactory;
+import com.lennertsoffers.persistence.api.repositories.Repository;
+
+public class ${className} implements Repository<${entity.getClassName()}> {
+    public void save(${entity.getClassName()} ${lowercaseName}) {
+        ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
+        Connection connection = connectionFactory.getConnection();
+
+        String insertSql = "INSERT INTO ${entity.getTableName()}(" +
+        #foreach($field in $entity.getFieldColumns())
+            "${field.columnName()}#if($foreach.hasNext),#end" +
+        #end
+        ") VALUES (" +
+                    "#foreach($field in $entity.getFieldColumns())?#if($foreach.hasNext), #end#end" +
+                ")";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(insertSql);
+            #set ($i = 1)
+    #foreach($field in $entity.getFieldColumns())
+    #set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))
+    preparedStatement.set${field.javaType()}($i, ${lowercaseName}#if(${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}());
+    #set ($i = $i + 1)
+            #end
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        connectionFactory.closeConnection(connection);
+    }
+}

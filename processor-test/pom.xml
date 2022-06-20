@@ -15,13 +15,13 @@
         <dependency>
             <groupId>com.lennertsoffers</groupId>
             <artifactId>annotation-processor</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.lennertsoffers</groupId>
-            <artifactId>annotation-processor</artifactId>
+            <artifactId>persistenceAPI</artifactId>
             <version>1.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

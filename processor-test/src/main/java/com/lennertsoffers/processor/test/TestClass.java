@@ -3,7 +3,7 @@ package com.lennertsoffers.processor.test;
 import com.lennertsoffers.annotation.processor.annotations.Entity;
 import com.lennertsoffers.annotation.processor.annotations.Id;
 
-@Entity
+@Entity("little_class")
 public class TestClass {
     @Id
     private int id;
@@ -14,7 +14,23 @@ public class TestClass {
         this.name = name;
     }
 
+    public TestClass(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

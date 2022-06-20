@@ -20,10 +20,13 @@ public class FieldFactory {
             sqlType = typeKind.toString();
         }
 
-        return new FieldColumn(fieldName, columnName, sqlType, pk);
+        String javaType = typeKind.toString().toLowerCase();
+        javaType = Character.toUpperCase(javaType.charAt(0)) + javaType.substring(1);
+
+        return new FieldColumn(fieldName, columnName, javaType, sqlType, pk);
     }
 
     public FieldColumn createField(String fieldName, String columnName, String type, boolean pk) {
-        return new FieldColumn(fieldName, columnName, "VARCHAR(255)", pk);
+        return new FieldColumn(fieldName, columnName, type, "VARCHAR(255)", pk);
     }
 }

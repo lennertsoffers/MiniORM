@@ -6,6 +6,7 @@ import com.lennertsoffers.annotation.processor.annotations.Id;
 import com.lennertsoffers.annotation.processor.models.EntityTable;
 import com.lennertsoffers.annotation.processor.models.FieldFactory;
 import com.lennertsoffers.annotation.processor.models.generators.ResourceGenerator;
+import com.lennertsoffers.annotation.processor.models.generators.SourceFileGenerator;
 import org.apache.velocity.VelocityContext;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -112,6 +113,7 @@ public class EntityMapper {
 
     private void generateFiles() {
         boolean generatedTableCreationScript = this.generateTableCreationScript();
+        this.generateBaseRepositories();
 
         System.out.println("Generated table creation script: " + generatedTableCreationScript);
     }
@@ -132,5 +134,23 @@ public class EntityMapper {
                 this.processingEnvironment,
                 velocityContext
         ).generateFile();
+    }
+
+    private void generateBaseRepositories() {
+        this.mappedEntities.forEach(entity -> {
+            String fileName = entity.getClassName() + "BaseRepository";
+
+            VelocityContext velocityContext = new VelocityContext();
+            velocityContext.put("entity", entity);
+            velocityContext.put("className", fileName);
+            velocityContext.put("lowercaseName", Character.toLowerCase(fileName.charAt(0)) + fileName.substring(1));
+
+            new SourceFileGenerator(
+                    "baseRepository.vm",
+                    fileName,
+                    this.processingEnvironment,
+                    velocityContext
+            ).generateFile();
+        });
     }
 }

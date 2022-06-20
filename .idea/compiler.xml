@@ -3,13 +3,18 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Maven default annotation processors profile" enabled="true">
+      <profile name="Maven default annotation processors profile" enabled="true" procOnly="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="persistenceAPI" />
         <module name="processor-test" />
         <module name="annotation-processor" />
+      </profile>
+      <profile name="Test" enabled="true">
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/Downloads/annotation-processor-1.0.0-SNAPSHOT.jar" />
+        </processorPath>
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

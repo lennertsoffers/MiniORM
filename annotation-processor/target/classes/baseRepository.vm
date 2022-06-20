@@ -3,6 +3,8 @@ package com.lennertsoffers.processor.test;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.util.Optional;
 
 import com.lennertsoffers.persistence.api.ConnectionFactory;
 import com.lennertsoffers.persistence.api.repositories.Repository;
@@ -35,5 +37,36 @@ public class ${className} implements Repository<${entity.getClassName()}> {
         }
 
         connectionFactory.closeConnection(connection);
+    }
+
+    public Optional<${entity.getClassName()}> findById(int id) {
+        ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
+        Connection connection = connectionFactory.getConnection();
+
+        String querySql = "SELECT * FROM ${entity.getTableName()} WHERE ${entity.getPrimaryKeyField().columnName()} = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(querySql);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                ${entity.getClassName()} ${lowercaseName} = new ${entity.getClassName()}();
+
+        #foreach($field in $entity.getFieldColumns())
+        #set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))
+        ${lowercaseName}.set${capitalizedName}(resultSet.get${field.javaType()}("${field.columnName()}"));
+        #end
+
+                connectionFactory.closeConnection(connection);
+
+                return Optional.of(${lowercaseName});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        connectionFactory.closeConnection(connection);
+        return Optional.empty();
     }
 }

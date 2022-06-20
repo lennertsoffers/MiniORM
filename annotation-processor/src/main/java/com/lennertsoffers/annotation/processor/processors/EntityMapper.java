@@ -7,6 +7,7 @@ import com.lennertsoffers.annotation.processor.models.EntityTable;
 import com.lennertsoffers.annotation.processor.models.FieldFactory;
 import com.lennertsoffers.annotation.processor.models.generators.ResourceGenerator;
 import com.lennertsoffers.annotation.processor.models.generators.SourceFileGenerator;
+import com.lennertsoffers.annotation.processor.utils.StringConverter;
 import org.apache.velocity.VelocityContext;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -58,7 +59,7 @@ public class EntityMapper {
         // Read the value of the @Entity annotation
         String tableName = element.getAnnotation(Entity.class).value();
         // Sets the tableName of the entity to the value of the annotation or the className if no name is specified
-        if (tableName.equals("")) tableName = element.getSimpleName().toString();
+        if (tableName.equals("")) tableName = StringConverter.toSnakeCase(element.getSimpleName().toString());
 
         // Set the effective values in the EntityTable object
         entity.setClassName(element.getSimpleName().toString());
@@ -81,7 +82,17 @@ public class EntityMapper {
                 // Get the name of the column
                 // Same as the simpleName of the field if no @Column annotation is specified
                 Column columnAnnotation = field.getAnnotation(Column.class);
-                String columName = (columnAnnotation != null) ? columnAnnotation.value() : field.getSimpleName().toString();
+                String columnName;
+                if (columnAnnotation != null) {
+                    columnName = columnAnnotation.value();
+                } else {
+                    // If the field is a primary key, the field is set to the table name plus _id
+                    if (primaryKey) {
+                        columnName = entity.getTableName() + "_id";
+                    } else {
+                        columnName = StringConverter.toSnakeCase(field.getSimpleName().toString());
+                    }
+                }
 
                 // The field is a class
                 // Create the field with type string
@@ -90,7 +101,7 @@ public class EntityMapper {
                     if (declaredType.asElement().getSimpleName().toString().equals("String")) {
                         entity.addField(fieldFactory.createField(
                                 field.getSimpleName().toString(),
-                                columName,
+                                columnName,
                                 "String",
                                 primaryKey
                         ));
@@ -102,7 +113,7 @@ public class EntityMapper {
                 else {
                     entity.addField(fieldFactory.createField(
                             field.getSimpleName().toString(),
-                            columName,
+                            columnName,
                             field.asType().getKind(),
                             primaryKey
                     ));
@@ -113,9 +124,10 @@ public class EntityMapper {
 
     private void generateFiles() {
         boolean generatedTableCreationScript = this.generateTableCreationScript();
-        this.generateBaseRepositories();
+        boolean generatedBaseRepositories = this.generateBaseRepositories();
 
         System.out.println("Generated table creation script: " + generatedTableCreationScript);
+        System.out.println("Generated base repositories: " + generatedBaseRepositories);
     }
 
     /**
@@ -136,21 +148,33 @@ public class EntityMapper {
         ).generateFile();
     }
 
-    private void generateBaseRepositories() {
-        this.mappedEntities.forEach(entity -> {
+    /**
+     * Generates the base repository java classes to save your entities
+     * @return if the generation of the repositories was successful
+     */
+    private boolean generateBaseRepositories() {
+        for (EntityTable entity : this.mappedEntities) {
+            // Compose the class and file name
             String fileName = entity.getClassName() + "BaseRepository";
 
+            // Create velocityContext with the mappedEntities
             VelocityContext velocityContext = new VelocityContext();
             velocityContext.put("entity", entity);
             velocityContext.put("className", fileName);
-            velocityContext.put("lowercaseName", Character.toLowerCase(fileName.charAt(0)) + fileName.substring(1));
+            velocityContext.put("lowercaseName", Character.toLowerCase(entity.getClassName().charAt(0)) + entity.getClassName().substring(1));
 
-            new SourceFileGenerator(
+            // Use a SourceFileGenerator to generate the repositories
+            boolean sourceFileGenerated = new SourceFileGenerator(
                     "baseRepository.vm",
                     fileName,
                     this.processingEnvironment,
                     velocityContext
             ).generateFile();
-        });
+
+            // Return false if the generation of a repository fails
+            if (!sourceFileGenerated) return false;
+        }
+
+        return true;
     }
 }

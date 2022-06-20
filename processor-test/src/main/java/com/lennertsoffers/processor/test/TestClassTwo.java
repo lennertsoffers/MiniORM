@@ -14,6 +14,17 @@ public class TestClassTwo {
     private int baseInt;
     private boolean baseBoolean;
 
+    public TestClassTwo() {}
+
+    public TestClassTwo(String className, float baseFloat, double baseDouble, long baseLong, int baseInt, boolean baseBoolean) {
+        this.className = className;
+        this.baseFloat = baseFloat;
+        this.baseDouble = baseDouble;
+        this.baseLong = baseLong;
+        this.baseInt = baseInt;
+        this.baseBoolean = baseBoolean;
+    }
+
     public int getId() {
         return id;
     }
@@ -68,5 +79,18 @@ public class TestClassTwo {
 
     public void setBaseBoolean(boolean baseBoolean) {
         this.baseBoolean = baseBoolean;
+    }
+
+    @Override
+    public String toString() {
+        return "TestClassTwo{" +
+                "id=" + id +
+                ", className='" + className + '\'' +
+                ", baseFloat=" + baseFloat +
+                ", baseDouble=" + baseDouble +
+                ", baseLong=" + baseLong +
+                ", baseInt=" + baseInt +
+                ", baseBoolean=" + baseBoolean +
+                '}';
     }
 }

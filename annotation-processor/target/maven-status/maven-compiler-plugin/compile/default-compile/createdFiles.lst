@@ -1,6 +1,7 @@
 com\lennertsoffers\annotation\processor\exception\UnsupportedTypeException.class
 com\lennertsoffers\annotation\processor\models\generators\Generator.class
 com\lennertsoffers\annotation\processor\models\generators\SourceFileGenerator.class
+com\lennertsoffers\annotation\processor\utils\StringConverter.class
 com\lennertsoffers\annotation\processor\annotations\Column.class
 com\lennertsoffers\annotation\processor\annotations\Id.class
 com\lennertsoffers\annotation\processor\models\FieldFactory.class

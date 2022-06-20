@@ -9,6 +9,9 @@ public class TestClass {
     private int id;
     private String name;
 
+    public TestClass() {
+    }
+
     public TestClass(int id, String name) {
         this.id = id;
         this.name = name;
@@ -32,5 +35,13 @@ public class TestClass {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "TestClass{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

@@ -9,23 +9,35 @@ import java.util.Optional;
 import com.lennertsoffers.persistence.api.ConnectionFactory;
 import com.lennertsoffers.persistence.api.repositories.Repository;
 
-public class TestClassBaseRepository implements Repository<TestClass> {
+
+public class TestClassBaseRepository implements Repository<Integer, TestClass> {
     public void save(TestClass testClass) {
         ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
         Connection connection = connectionFactory.getConnection();
 
+        String columnNames = "";
+        columnNames += "little_class_id, ";
+        columnNames += "name, ";
+
+        columnNames = columnNames.substring(0, columnNames.length() - 2);
+
+        int paramCount = 0;
+        paramCount++;
+        paramCount++;
+        String paramString = "?, ".repeat(paramCount);
+        paramString = paramString.substring(0, paramString.length() - 2);
+
         String insertSql = "INSERT INTO little_class(" +
-                    "little_class_id," +
-                    "name" +
-                ") VALUES (" +
-                    "?, ?" +
-                ")";
+            columnNames +
+        ") VALUES (" +
+            paramString +
+        ")";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(insertSql);
-                    preparedStatement.setInt(1, testClass.getId());
-                    preparedStatement.setString(2, testClass.getName());
-                
+            preparedStatement.setInt(1, testClass.getId());
+            preparedStatement.setString(2, testClass.getName());
+        
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -34,7 +46,7 @@ public class TestClassBaseRepository implements Repository<TestClass> {
         connectionFactory.closeConnection(connection);
     }
 
-    public Optional<TestClass> findById(int id) {
+    public Optional<TestClass> findById(Integer id) {
         ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
         Connection connection = connectionFactory.getConnection();
 

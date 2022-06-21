@@ -98,14 +98,15 @@ public class EntityMapper {
                 // Create the field with type string
                 if (field.asType().getKind().equals(TypeKind.DECLARED)) {
                     DeclaredType declaredType = (DeclaredType) field.asType();
-                    if (declaredType.asElement().getSimpleName().toString().equals("String")) {
+                    if (fieldFactory.isAllowedDeclaredType(declaredType.asElement().getSimpleName().toString())) {
                         entity.addField(fieldFactory.createField(
                                 field.getSimpleName().toString(),
                                 columnName,
-                                "String",
+                                declaredType.asElement().getSimpleName().toString(),
                                 primaryKey
                         ));
                     }
+                    // Else: Mapping
                 }
 
                 // The field is primitive

@@ -6,6 +6,11 @@ CREATE TABLE test_class_two (
     base_double DOUBLE,
     base_long BIGINT,
     base_int INT,
-    base_boolean BOOLEAN
+    base_boolean BOOLEAN,
+    wrapper_float VARCHAR(255),
+    wrapper_double VARCHAR(255),
+    wrapper_long VARCHAR(255),
+    wrapper_int VARCHAR(255),
+    wrapper_boolean VARCHAR(255)
 );
 

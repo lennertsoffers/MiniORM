@@ -9,27 +9,52 @@ import java.util.Optional;
 import com.lennertsoffers.persistence.api.ConnectionFactory;
 import com.lennertsoffers.persistence.api.repositories.Repository;
 
-public class ${className} implements Repository<${entity.getClassName()}> {
+
+public class ${className} implements Repository<${entity.getPrimaryKeyField().wrapperType()}, ${entity.getClassName()}> {
     public void save(${entity.getClassName()} ${lowercaseName}) {
         ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
         Connection connection = connectionFactory.getConnection();
 
+        String columnNames = "";
+#foreach($field in $entity.getFieldColumns())#set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))
+        #if(${field.wrapper()})if (${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}() != null) {
+            columnNames += "${field.columnName()}, ";
+        }
+#else
+columnNames += "${field.columnName()}, ";
+#end
+#end
+
+        columnNames = columnNames.substring(0, columnNames.length() - 2);
+
+        int paramCount = 0;
+    #foreach($field in $entity.getFieldColumns())#set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))
+    #if(${field.wrapper()})if (${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}() != null) {
+            paramCount++;
+        }
+    #else
+paramCount++;
+    #end
+#end
+    String paramString = "?, ".repeat(paramCount);
+        paramString = paramString.substring(0, paramString.length() - 2);
+
         String insertSql = "INSERT INTO ${entity.getTableName()}(" +
-        #foreach($field in $entity.getFieldColumns())
-            "${field.columnName()}#if($foreach.hasNext),#end" +
-        #end
+            columnNames +
         ") VALUES (" +
-                    "#foreach($field in $entity.getFieldColumns())?#if($foreach.hasNext), #end#end" +
-                ")";
+            paramString +
+        ")";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(insertSql);
-            #set ($i = 1)
-    #foreach($field in $entity.getFieldColumns())
-    #set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))
-    preparedStatement.set${field.javaType()}($i, ${lowercaseName}#if(${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}());
-    #set ($i = $i + 1)
-            #end
+        #set ($i = 1)#foreach($field in $entity.getFieldColumns())#set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))#set ($capitalizedJavaType = $field.javaType().substring(0, 1).toUpperCase() + $field.javaType().substring(1))
+    #if(${field.wrapper()})if (${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}() != null) {
+                preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}());
+            }
+        #else
+preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}());
+        #end
+        #set ($i = $i + 1)#end
 
             preparedStatement.execute();
         } catch (SQLException e) {
@@ -39,7 +64,7 @@ public class ${className} implements Repository<${entity.getClassName()}> {
         connectionFactory.closeConnection(connection);
     }
 
-    public Optional<${entity.getClassName()}> findById(int id) {
+    public Optional<${entity.getClassName()}> findById(${entity.getPrimaryKeyField().wrapperType()} id) {
         ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
         Connection connection = connectionFactory.getConnection();
 
@@ -55,7 +80,8 @@ public class ${className} implements Repository<${entity.getClassName()}> {
 
         #foreach($field in $entity.getFieldColumns())
         #set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))
-        ${lowercaseName}.set${capitalizedName}(resultSet.get${field.javaType()}("${field.columnName()}"));
+        #set ($capitalizedJavaType = $field.javaType().substring(0, 1).toUpperCase() + $field.javaType().substring(1))
+        ${lowercaseName}.set${capitalizedName}(resultSet.get${capitalizedJavaType}("${field.columnName()}"));
         #end
 
                 connectionFactory.closeConnection(connection);

@@ -13,6 +13,11 @@ public class TestClassTwo {
     private long baseLong;
     private int baseInt;
     private boolean baseBoolean;
+    private Float wrapperFloat;
+    private Double wrapperDouble;
+    private Long wrapperLong;
+    private Integer wrapperInt;
+    private Boolean wrapperBoolean;
 
     public TestClassTwo() {}
 
@@ -79,6 +84,46 @@ public class TestClassTwo {
 
     public void setBaseBoolean(boolean baseBoolean) {
         this.baseBoolean = baseBoolean;
+    }
+
+    public Float getWrapperFloat() {
+        return wrapperFloat;
+    }
+
+    public void setWrapperFloat(Float wrapperFloat) {
+        this.wrapperFloat = wrapperFloat;
+    }
+
+    public Double getWrapperDouble() {
+        return wrapperDouble;
+    }
+
+    public void setWrapperDouble(Double wrapperDouble) {
+        this.wrapperDouble = wrapperDouble;
+    }
+
+    public Long getWrapperLong() {
+        return wrapperLong;
+    }
+
+    public void setWrapperLong(Long wrapperLong) {
+        this.wrapperLong = wrapperLong;
+    }
+
+    public Integer getWrapperInt() {
+        return wrapperInt;
+    }
+
+    public void setWrapperInt(Integer wrapperInt) {
+        this.wrapperInt = wrapperInt;
+    }
+
+    public Boolean isWrapperBoolean() {
+        return wrapperBoolean;
+    }
+
+    public void setWrapperBoolean(Boolean wrapperBoolean) {
+        this.wrapperBoolean = wrapperBoolean;
     }
 
     @Override

@@ -110,62 +110,73 @@ public class TestClassTwoBaseRepository implements Repository<Integer, TestClass
         ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
         Connection connection = connectionFactory.getConnection();
 
+        int setCount = 1;
         String columnNames = "";
-                                columnNames += "test_class_two_id = ?, ";
-                                            columnNames += "class_name = ?, ";
-                                            columnNames += "base_float = ?, ";
-                                            columnNames += "base_double = ?, ";
-                                            columnNames += "base_long = ?, ";
-                                            columnNames += "base_int = ?, ";
-                                            columnNames += "base_boolean = ?, ";
-                                if (testClassTwo.getWrapperFloat() != null) {
+        columnNames += "class_name = ?, ";
+        setCount++;
+        columnNames += "base_float = ?, ";
+        setCount++;
+        columnNames += "base_double = ?, ";
+        setCount++;
+        columnNames += "base_long = ?, ";
+        setCount++;
+        columnNames += "base_int = ?, ";
+        setCount++;
+        columnNames += "base_boolean = ?, ";
+        setCount++;
+        if (testClassTwo.getWrapperFloat() != null) {
             columnNames += "wrapper_float = ?, ";
-            }
-                                if (testClassTwo.getWrapperDouble() != null) {
+            setCount++;
+        }
+        if (testClassTwo.getWrapperDouble() != null) {
             columnNames += "wrapper_double = ?, ";
-            }
-                                if (testClassTwo.getWrapperLong() != null) {
+            setCount++;
+        }
+        if (testClassTwo.getWrapperLong() != null) {
             columnNames += "wrapper_long = ?, ";
-            }
-                                if (testClassTwo.getWrapperInt() != null) {
+            setCount++;
+        }
+        if (testClassTwo.getWrapperInt() != null) {
             columnNames += "wrapper_int = ?, ";
-            }
-                                if (testClassTwo.isWrapperBoolean() != null) {
+            setCount++;
+        }
+        if (testClassTwo.isWrapperBoolean() != null) {
             columnNames += "wrapper_boolean = ?, ";
-            }
-                    
+            setCount++;
+        }
+    
         columnNames = columnNames.substring(0, columnNames.length() - 2) + " ";
 
         String updateSql = "UPDATE test_class_two SET " +
             columnNames +
-            " WHERE test_class_two_id = ?";
+            "WHERE test_class_two_id = ?";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(updateSql);
 
-                                                                            preparedStatement.setString(1, testClassTwo.getClassName());
-                                                                    preparedStatement.setFloat(2, testClassTwo.getBaseFloat());
-                                                                    preparedStatement.setDouble(3, testClassTwo.getBaseDouble());
-                                                                    preparedStatement.setLong(4, testClassTwo.getBaseLong());
-                                                                    preparedStatement.setInt(5, testClassTwo.getBaseInt());
-                                                                    preparedStatement.setBoolean(6, testClassTwo.isBaseBoolean());
-                                                    if (testClassTwo.getWrapperFloat() != null) {
+            preparedStatement.setString(1, testClassTwo.getClassName());
+            preparedStatement.setFloat(2, testClassTwo.getBaseFloat());
+            preparedStatement.setDouble(3, testClassTwo.getBaseDouble());
+            preparedStatement.setLong(4, testClassTwo.getBaseLong());
+            preparedStatement.setInt(5, testClassTwo.getBaseInt());
+            preparedStatement.setBoolean(6, testClassTwo.isBaseBoolean());
+            if (testClassTwo.getWrapperFloat() != null) {
                 preparedStatement.setFloat(7, testClassTwo.getWrapperFloat());
-                }
-                                                    if (testClassTwo.getWrapperDouble() != null) {
+            }
+            if (testClassTwo.getWrapperDouble() != null) {
                 preparedStatement.setDouble(8, testClassTwo.getWrapperDouble());
-                }
-                                                    if (testClassTwo.getWrapperLong() != null) {
+            }
+            if (testClassTwo.getWrapperLong() != null) {
                 preparedStatement.setLong(9, testClassTwo.getWrapperLong());
-                }
-                                                    if (testClassTwo.getWrapperInt() != null) {
+            }
+            if (testClassTwo.getWrapperInt() != null) {
                 preparedStatement.setInt(10, testClassTwo.getWrapperInt());
-                }
-                                                    if (testClassTwo.isWrapperBoolean() != null) {
+            }
+            if (testClassTwo.isWrapperBoolean() != null) {
                 preparedStatement.setBoolean(11, testClassTwo.isWrapperBoolean());
-                }
-                                                    preparedStatement.setBoolean(12, testClassTwo.getWrapperBoolean());
-            
+            }
+            preparedStatement.setInt(setCount, id);
+
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

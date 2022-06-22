@@ -68,15 +68,18 @@ preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${field.java
         ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
         Connection connection = connectionFactory.getConnection();
 
+        int setCount = 1;
         String columnNames = "";
-        #foreach($field in $entity.getFieldColumns())#set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))
-            #if(${field.wrapper()})if (${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}() != null) {
+#foreach($field in $entity.getFieldColumns())#set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))
+    #if($foreach.index != 0)#if(${field.wrapper()})if (${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}() != null) {
             columnNames += "${field.columnName()} = ?, ";
-            }
-            #else
-            columnNames += "${field.columnName()} = ?, ";
-            #end
-        #end
+            setCount++;
+        }
+    #else
+columnNames += "${field.columnName()} = ?, ";
+        setCount++;
+    #end#end
+#end
 
         columnNames = columnNames.substring(0, columnNames.length() - 2) + " ";
 
@@ -87,22 +90,15 @@ preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${field.java
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(updateSql);
 
-            #set ($i = 1)#foreach($field in $entity.getFieldColumns())#set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))#set ($capitalizedJavaType = $field.javaType().substring(0, 1).toUpperCase() + $field.javaType().substring(1))
-            #if($foreach.index != 0)
-            #if(${field.wrapper()})if (${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}() != null) {
+#set ($i = 1)#foreach($field in $entity.getFieldColumns())#set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))#set ($capitalizedJavaType = $field.javaType().substring(0, 1).toUpperCase() + $field.javaType().substring(1))#if($foreach.index != 0)#if(${field.wrapper()})if (${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}() != null) {
                 preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}());
-                }
-                #else
-                preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}());
-                #end
-                #set ($i = $i + 1)#end
-            #end
-            #if(${field.wrapper()})if (${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}() != null) {
-            preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${entity.getPrimaryKeyField().javaType().equals("boolean")} || ${entity.getPrimaryKeyField().javaType().equals("Boolean")}).is#else.get#end${capitalizedName}());
             }
-            #else
-            preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${entity.getPrimaryKeyField().javaType().equals("boolean")} || ${entity.getPrimaryKeyField().javaType().equals("Boolean")}).is#else.get#end${capitalizedName}());
-            #end
+#else
+preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}());
+#end
+#set ($i = $i + 1)#end
+            #end#set ($capitalizedJavaType = $entity.getPrimaryKeyField().javaType().substring(0, 1).toUpperCase() + $entity.getPrimaryKeyField().javaType().substring(1))
+preparedStatement.set${capitalizedJavaType}(setCount, id);
 
             preparedStatement.execute();
         } catch (SQLException e) {

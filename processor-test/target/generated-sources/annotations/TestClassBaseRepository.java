@@ -50,10 +50,11 @@ public class TestClassBaseRepository implements Repository<Integer, TestClass> {
         ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
         Connection connection = connectionFactory.getConnection();
 
+        int setCount = 1;
         String columnNames = "";
-                                columnNames += "little_class_id = ?, ";
-                                            columnNames += "name = ?, ";
-                    
+        columnNames += "name = ?, ";
+        setCount++;
+    
         columnNames = columnNames.substring(0, columnNames.length() - 2) + " ";
 
         String updateSql = "UPDATE little_class SET " +
@@ -63,9 +64,9 @@ public class TestClassBaseRepository implements Repository<Integer, TestClass> {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(updateSql);
 
-                                                                            preparedStatement.setString(1, testClass.getName());
-                                                    preparedStatement.setString(2, testClass.getName());
-            
+            preparedStatement.setString(1, testClass.getName());
+            preparedStatement.setInt(setCount, id);
+
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

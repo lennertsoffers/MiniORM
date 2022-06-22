@@ -28,8 +28,9 @@ public class Main {
         TestClassTwo tct3 = testClassTwoRepository.findById(1).get();
         TestClassTwo tct4 = testClassTwoRepository.findById(2).get();
 
-
         System.out.println(tct3);
         System.out.println(tct4);
+
+        System.out.println(testClassTwoRepository.updateById(new TestClassTwo("Lala", 123f, 234, 34, 2233, false), 1).get());
     }
 }

@@ -106,6 +106,76 @@ public class TestClassTwoBaseRepository implements Repository<Integer, TestClass
         connectionFactory.closeConnection(connection);
     }
 
+    public Optional<TestClassTwo> updateById(TestClassTwo testClassTwo, Integer id) {
+        ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
+        Connection connection = connectionFactory.getConnection();
+
+        String columnNames = "";
+                                columnNames += "test_class_two_id = ?, ";
+                                            columnNames += "class_name = ?, ";
+                                            columnNames += "base_float = ?, ";
+                                            columnNames += "base_double = ?, ";
+                                            columnNames += "base_long = ?, ";
+                                            columnNames += "base_int = ?, ";
+                                            columnNames += "base_boolean = ?, ";
+                                if (testClassTwo.getWrapperFloat() != null) {
+            columnNames += "wrapper_float = ?, ";
+            }
+                                if (testClassTwo.getWrapperDouble() != null) {
+            columnNames += "wrapper_double = ?, ";
+            }
+                                if (testClassTwo.getWrapperLong() != null) {
+            columnNames += "wrapper_long = ?, ";
+            }
+                                if (testClassTwo.getWrapperInt() != null) {
+            columnNames += "wrapper_int = ?, ";
+            }
+                                if (testClassTwo.isWrapperBoolean() != null) {
+            columnNames += "wrapper_boolean = ?, ";
+            }
+                    
+        columnNames = columnNames.substring(0, columnNames.length() - 2) + " ";
+
+        String updateSql = "UPDATE test_class_two SET " +
+            columnNames +
+            " WHERE test_class_two_id = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(updateSql);
+
+                                                                            preparedStatement.setString(1, testClassTwo.getClassName());
+                                                                    preparedStatement.setFloat(2, testClassTwo.getBaseFloat());
+                                                                    preparedStatement.setDouble(3, testClassTwo.getBaseDouble());
+                                                                    preparedStatement.setLong(4, testClassTwo.getBaseLong());
+                                                                    preparedStatement.setInt(5, testClassTwo.getBaseInt());
+                                                                    preparedStatement.setBoolean(6, testClassTwo.isBaseBoolean());
+                                                    if (testClassTwo.getWrapperFloat() != null) {
+                preparedStatement.setFloat(7, testClassTwo.getWrapperFloat());
+                }
+                                                    if (testClassTwo.getWrapperDouble() != null) {
+                preparedStatement.setDouble(8, testClassTwo.getWrapperDouble());
+                }
+                                                    if (testClassTwo.getWrapperLong() != null) {
+                preparedStatement.setLong(9, testClassTwo.getWrapperLong());
+                }
+                                                    if (testClassTwo.getWrapperInt() != null) {
+                preparedStatement.setInt(10, testClassTwo.getWrapperInt());
+                }
+                                                    if (testClassTwo.isWrapperBoolean() != null) {
+                preparedStatement.setBoolean(11, testClassTwo.isWrapperBoolean());
+                }
+                                                    preparedStatement.setBoolean(12, testClassTwo.getWrapperBoolean());
+            
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        connectionFactory.closeConnection(connection);
+
+        return this.findById(id);
+    }
+
     public Optional<TestClassTwo> findById(Integer id) {
         ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
         Connection connection = connectionFactory.getConnection();
@@ -128,10 +198,25 @@ public class TestClassTwoBaseRepository implements Repository<Integer, TestClass
                 testClassTwo.setBaseInt(resultSet.getInt("base_int"));
                 testClassTwo.setBaseBoolean(resultSet.getBoolean("base_boolean"));
                 testClassTwo.setWrapperFloat(resultSet.getFloat("wrapper_float"));
+                if (resultSet.wasNull()) {
+                    testClassTwo.setWrapperFloat(null);
+                }
                 testClassTwo.setWrapperDouble(resultSet.getDouble("wrapper_double"));
+                if (resultSet.wasNull()) {
+                    testClassTwo.setWrapperDouble(null);
+                }
                 testClassTwo.setWrapperLong(resultSet.getLong("wrapper_long"));
+                if (resultSet.wasNull()) {
+                    testClassTwo.setWrapperLong(null);
+                }
                 testClassTwo.setWrapperInt(resultSet.getInt("wrapper_int"));
+                if (resultSet.wasNull()) {
+                    testClassTwo.setWrapperInt(null);
+                }
                 testClassTwo.setWrapperBoolean(resultSet.getBoolean("wrapper_boolean"));
+                if (resultSet.wasNull()) {
+                    testClassTwo.setWrapperBoolean(null);
+                }
         
                 connectionFactory.closeConnection(connection);
 

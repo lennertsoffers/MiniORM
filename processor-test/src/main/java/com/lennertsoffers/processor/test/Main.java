@@ -13,6 +13,7 @@ public class Main {
         TestClass testClass2 = new TestClass("second_test_class");
         TestClassTwo tct1 = new TestClassTwo(null, 1.0f, 1.0, 1L, 1, true);
         TestClassTwo tct2 = new TestClassTwo("tct2", 1.0f, 1.0, 1L, 1, true);
+        tct2.setWrapperDouble(null);
 
         testClassRepository.save(testClass1);
         testClassRepository.save(testClass2);

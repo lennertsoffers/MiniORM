@@ -46,6 +46,36 @@ public class TestClassBaseRepository implements Repository<Integer, TestClass> {
         connectionFactory.closeConnection(connection);
     }
 
+    public Optional<TestClass> updateById(TestClass testClass, Integer id) {
+        ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
+        Connection connection = connectionFactory.getConnection();
+
+        String columnNames = "";
+                                columnNames += "little_class_id = ?, ";
+                                            columnNames += "name = ?, ";
+                    
+        columnNames = columnNames.substring(0, columnNames.length() - 2) + " ";
+
+        String updateSql = "UPDATE little_class SET " +
+            columnNames +
+            "WHERE little_class_id = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(updateSql);
+
+                                                                            preparedStatement.setString(1, testClass.getName());
+                                                    preparedStatement.setString(2, testClass.getName());
+            
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        connectionFactory.closeConnection(connection);
+
+        return this.findById(id);
+    }
+
     public Optional<TestClass> findById(Integer id) {
         ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
         Connection connection = connectionFactory.getConnection();

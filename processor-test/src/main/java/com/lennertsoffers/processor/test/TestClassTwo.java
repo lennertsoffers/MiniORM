@@ -136,6 +136,11 @@ public class TestClassTwo {
                 ", baseLong=" + baseLong +
                 ", baseInt=" + baseInt +
                 ", baseBoolean=" + baseBoolean +
+                ", wrapperFloat=" + wrapperFloat +
+                ", wrapperDouble=" + wrapperDouble +
+                ", wrapperLong=" + wrapperLong +
+                ", wrapperInt=" + wrapperInt +
+                ", wrapperBoolean=" + wrapperBoolean +
                 '}';
     }
 }

@@ -14,3 +14,9 @@ CREATE TABLE test_class_two (
     wrapper_boolean VARCHAR(255)
 );
 
+DROP TABLE IF EXISTS little_class;
+CREATE TABLE little_class (
+    little_class_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255)
+);
+

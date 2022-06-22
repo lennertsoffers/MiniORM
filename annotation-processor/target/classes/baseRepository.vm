@@ -64,6 +64,56 @@ preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${field.java
         connectionFactory.closeConnection(connection);
     }
 
+    public Optional<${entity.getClassName()}> updateById(${entity.getClassName()} ${lowercaseName}, ${entity.getPrimaryKeyField().wrapperType()} id) {
+        ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
+        Connection connection = connectionFactory.getConnection();
+
+        String columnNames = "";
+        #foreach($field in $entity.getFieldColumns())#set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))
+            #if(${field.wrapper()})if (${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}() != null) {
+            columnNames += "${field.columnName()} = ?, ";
+            }
+            #else
+            columnNames += "${field.columnName()} = ?, ";
+            #end
+        #end
+
+        columnNames = columnNames.substring(0, columnNames.length() - 2) + " ";
+
+        String updateSql = "UPDATE ${entity.getTableName()} SET " +
+            columnNames +
+            "WHERE ${entity.getPrimaryKeyField().columnName()} = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(updateSql);
+
+            #set ($i = 1)#foreach($field in $entity.getFieldColumns())#set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))#set ($capitalizedJavaType = $field.javaType().substring(0, 1).toUpperCase() + $field.javaType().substring(1))
+            #if($foreach.index != 0)
+            #if(${field.wrapper()})if (${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}() != null) {
+                preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}());
+                }
+                #else
+                preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}());
+                #end
+                #set ($i = $i + 1)#end
+            #end
+            #if(${field.wrapper()})if (${lowercaseName}#if(${field.javaType().equals("boolean")} || ${field.javaType().equals("Boolean")}).is#else.get#end${capitalizedName}() != null) {
+            preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${entity.getPrimaryKeyField().javaType().equals("boolean")} || ${entity.getPrimaryKeyField().javaType().equals("Boolean")}).is#else.get#end${capitalizedName}());
+            }
+            #else
+            preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${entity.getPrimaryKeyField().javaType().equals("boolean")} || ${entity.getPrimaryKeyField().javaType().equals("Boolean")}).is#else.get#end${capitalizedName}());
+            #end
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        connectionFactory.closeConnection(connection);
+
+        return this.findById(id);
+    }
+
     public Optional<${entity.getClassName()}> findById(${entity.getPrimaryKeyField().wrapperType()} id) {
         ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
         Connection connection = connectionFactory.getConnection();
@@ -82,6 +132,11 @@ preparedStatement.set${capitalizedJavaType}($i, ${lowercaseName}#if(${field.java
         #set ($capitalizedName = $field.fieldName().substring(0, 1).toUpperCase() + $field.fieldName().substring(1))
         #set ($capitalizedJavaType = $field.javaType().substring(0, 1).toUpperCase() + $field.javaType().substring(1))
         ${lowercaseName}.set${capitalizedName}(resultSet.get${capitalizedJavaType}("${field.columnName()}"));
+#if(${field.wrapper()})
+                if (resultSet.wasNull()) {
+                    ${lowercaseName}.set${capitalizedName}(null);
+                }
+#end
         #end
 
                 connectionFactory.closeConnection(connection);

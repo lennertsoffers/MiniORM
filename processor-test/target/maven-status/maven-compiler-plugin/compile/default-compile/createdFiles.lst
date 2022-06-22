@@ -2,5 +2,3 @@ com\lennertsoffers\processor\test\TestClass.class
 createTablesScript.sql
 com\lennertsoffers\processor\test\Main.class
 com\lennertsoffers\processor\test\TestClassTwo.class
-com\lennertsoffers\processor\test\TestClassTwoBaseRepository.class
-com\lennertsoffers\processor\test\TestClassBaseRepository.class

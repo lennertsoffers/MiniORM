@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS little_class;
+CREATE TABLE little_class (
+    little_class_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255)
+);
+
 DROP TABLE IF EXISTS test_class_two;
 CREATE TABLE test_class_two (
     test_class_two_id INT PRIMARY KEY AUTO_INCREMENT,

@@ -13,6 +13,7 @@ public class Main {
         TestClass testClass2 = new TestClass("second_test_class");
         TestClassTwo tct1 = new TestClassTwo(null, 1.0f, 1.0, 1L, 1, true);
         TestClassTwo tct2 = new TestClassTwo("tct2", 1.0f, 1.0, 1L, 1, true);
+        tct2.setWrapperDouble(null);
 
         testClassRepository.save(testClass1);
         testClassRepository.save(testClass2);
@@ -27,8 +28,12 @@ public class Main {
         TestClassTwo tct3 = testClassTwoRepository.findById(1).get();
         TestClassTwo tct4 = testClassTwoRepository.findById(2).get();
 
-
         System.out.println(tct3);
         System.out.println(tct4);
+
+        System.out.println(testClassTwoRepository.updateById(new TestClassTwo("Lala", 123f, 234, 34, 2233, false), 1).get());
+
+        testClassRepository.delete(1);
+        testClassTwoRepository.delete(1);
     }
 }

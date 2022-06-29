@@ -46,6 +46,37 @@ public class TestClassBaseRepository implements Repository<Integer, TestClass> {
         connectionFactory.closeConnection(connection);
     }
 
+    public Optional<TestClass> updateById(TestClass testClass, Integer id) {
+        ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
+        Connection connection = connectionFactory.getConnection();
+
+        int setCount = 1;
+        String columnNames = "";
+        columnNames += "name = ?, ";
+        setCount++;
+    
+        columnNames = columnNames.substring(0, columnNames.length() - 2) + " ";
+
+        String updateSql = "UPDATE little_class SET " +
+            columnNames +
+            "WHERE little_class_id = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(updateSql);
+
+            preparedStatement.setString(1, testClass.getName());
+            preparedStatement.setInt(setCount, id);
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        connectionFactory.closeConnection(connection);
+
+        return this.findById(id);
+    }
+
     public Optional<TestClass> findById(Integer id) {
         ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
         Connection connection = connectionFactory.getConnection();
@@ -73,5 +104,25 @@ public class TestClassBaseRepository implements Repository<Integer, TestClass> {
 
         connectionFactory.closeConnection(connection);
         return Optional.empty();
+    }
+
+    public boolean delete(Integer id) {
+        ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
+        Connection connection = connectionFactory.getConnection();
+
+        String deleteSql = "DELETE FROM little_class WHERE little_class_id = ?";
+        boolean deleteSucceeded = false;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(deleteSql);
+            preparedStatement.setInt(1, id);
+
+            deleteSucceeded = preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        connectionFactory.closeConnection(connection);
+        return deleteSucceeded;
     }
 }

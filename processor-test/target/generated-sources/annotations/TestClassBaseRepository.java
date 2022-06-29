@@ -105,4 +105,24 @@ public class TestClassBaseRepository implements Repository<Integer, TestClass> {
         connectionFactory.closeConnection(connection);
         return Optional.empty();
     }
+
+    public boolean delete(Integer id) {
+        ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
+        Connection connection = connectionFactory.getConnection();
+
+        String deleteSql = "DELETE FROM little_class WHERE little_class_id = ?";
+        boolean deleteSucceeded = false;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(deleteSql);
+            preparedStatement.setInt(1, id);
+
+            deleteSucceeded = preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        connectionFactory.closeConnection(connection);
+        return deleteSucceeded;
+    }
 }

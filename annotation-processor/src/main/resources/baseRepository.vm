@@ -118,7 +118,8 @@ preparedStatement.set${capitalizedJavaType}(setCount, id);
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(querySql);
-            preparedStatement.setInt(1, id);
+#set ($capitalizedJavaType = $entity.getPrimaryKeyField().javaType().substring(0, 1).toUpperCase() + $entity.getPrimaryKeyField().javaType().substring(1))
+            preparedStatement.set${capitalizedJavaType}(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
@@ -145,5 +146,26 @@ preparedStatement.set${capitalizedJavaType}(setCount, id);
 
         connectionFactory.closeConnection(connection);
         return Optional.empty();
+    }
+
+    public boolean delete(${entity.getPrimaryKeyField().wrapperType()} id) {
+        ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
+        Connection connection = connectionFactory.getConnection();
+
+        String deleteSql = "DELETE FROM ${entity.getTableName()} WHERE ${entity.getPrimaryKeyField().columnName()} = ?";
+        boolean deleteSucceeded = false;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(deleteSql);
+#set ($capitalizedJavaType = $entity.getPrimaryKeyField().javaType().substring(0, 1).toUpperCase() + $entity.getPrimaryKeyField().javaType().substring(1))
+            preparedStatement.set${capitalizedJavaType}(1, id);
+
+            deleteSucceeded = preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        connectionFactory.closeConnection(connection);
+        return deleteSucceeded;
     }
 }

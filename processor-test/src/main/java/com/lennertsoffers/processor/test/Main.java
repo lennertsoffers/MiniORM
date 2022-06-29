@@ -32,5 +32,8 @@ public class Main {
         System.out.println(tct4);
 
         System.out.println(testClassTwoRepository.updateById(new TestClassTwo("Lala", 123f, 234, 34, 2233, false), 1).get());
+
+        testClassRepository.delete(1);
+        testClassTwoRepository.delete(1);
     }
 }
